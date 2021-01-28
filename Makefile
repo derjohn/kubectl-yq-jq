@@ -10,7 +10,7 @@ docker-buildx: ## [DEBARCH={amd64,arm64v8}] [ARCH={amd64,arm64}] [KUBECTL=v1.20.
 	docker buildx build --platform linux/$(ARCH) -t $(DKRIMAGE):$(ARCH)-latest --build-arg ARCH=$(ARCH) --build-arg DEBARCH=$(DEBARCH) --build-arg KUBECTL=$(KUBECTL) --build-arg YQ=$(YQ) .
 
 docker-buildx-amd64: ## Builds for amd64
-	${MAKE} docker-buildx ARCH=arm64 DEBARCH=arm64v8 ARCH=amd64 DEBARCH=amd64
+	${MAKE} docker-buildx ARCH=amd64 DEBARCH=amd64
 
 docker-buildx-arm64: ## Builds for arm64 (v8)
 	${MAKE} docker-buildx ARCH=arm64 DEBARCH=arm64v8
