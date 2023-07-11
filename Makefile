@@ -1,13 +1,15 @@
 DKRIMAGE:=derjohn/kubectl-yq-jq
 ARCH=amd64
 DEBARCH=amd64
-KUBECTL=v1.20.2
-YQ=v4.4.1
+KUBECTL=v1.27.3
+YQ=v4.34.1
 
 .PHONY: docker-buildx docker-buildx-amd64 docker-buildx-arm64 docker-run dockerhub dockerhub-multiarch-manifest help
 
 docker-buildx: ## [DEBARCH={amd64,arm64v8}] [ARCH={amd64,arm64}] [KUBECTL=v1.20.2] [YQ=v4.4.1]
 	docker buildx build --platform linux/$(ARCH) -t $(DKRIMAGE):$(ARCH)-latest --build-arg ARCH=$(ARCH) --build-arg DEBARCH=$(DEBARCH) --build-arg KUBECTL=$(KUBECTL) --build-arg YQ=$(YQ) .
+	docker buildx imagetools create --tag $(DKRIMAGE):$(ARCH)-kubectl${KUBECTL}-yq${YQ} $(DKRIMAGE):$(ARCH)-latest
+
 
 docker-buildx-amd64: ## Builds for amd64
 	${MAKE} docker-buildx ARCH=amd64 DEBARCH=amd64
@@ -19,6 +21,7 @@ docker-buildx-multi-arch: docker-buildx-amd64 docker-buildx-arm64 ## Make the mu
 
 dockerhub: ## Make docker push to the repo in DKRIMAGE ($(DKRIMAGE))
 	docker push $(DKRIMAGE):$(ARCH)-latest
+	docker push $(DKRIMAGE):$(ARCH)-kubectl${KUBECTL}-yq${YQ}
 
 dockerhub-multiarch-manifest: docker-buildx-multi-arch ## Push images for all ARCH to dockerhub and create a manifest
 	${MAKE} dockerhub ARCH=amd64
