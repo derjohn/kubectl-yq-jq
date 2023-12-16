@@ -1,6 +1,6 @@
 ARG DEBARCH # amd64,arm64v8
 ARG ARCH # amd64,arm64
-FROM --platform=linux/${ARCH} ${DEBARCH}/debian:buster-slim
+FROM --platform=linux/${ARCH} ${DEBARCH}/debian:bookworm-slim
 
 ARG ARCH
 ARG KUBECTL=v1.20.2
