@@ -12,9 +12,7 @@ help:
 	@echo "docker buildx create --name mybuilder ; docker buildx use mybuilder"
 
 docker-buildx: ## [DEBARCH={amd64,arm64v8}] [ARCH={amd64,arm64}] [KUBECTL=vXXXX] [YQ=vXXXX]
-	docker buildx build --platform linux/$(ARCH) -t $(DKRIMAGE):$(ARCH)-latest --build-arg ARCH=$(ARCH) --build-arg DEBARCH=$(DEBARCH) --build-arg KUBECTL=$(KUBECTL) --build-arg YQ=$(YQ) .
-	docker buildx imagetools create --tag $(DKRIMAGE):$(ARCH)-kubectl${KUBECTL}-yq${YQ} $(DKRIMAGE):$(ARCH)-latest
-
+	docker buildx build --no-cache --platform linux/$(ARCH) -t $(DKRIMAGE):$(ARCH)-latest -t $(DKRIMAGE):$(ARCH)-kubectl$(KUBECTL)-yq$(YQ) --build-arg ARCH=$(ARCH) --build-arg DEBARCH=$(DEBARCH) --build-arg KUBECTL=$(KUBECTL) --build-arg YQ=$(YQ) --load .
 
 docker-buildx-amd64: ## Builds for amd64
 	${MAKE} docker-buildx ARCH=amd64 DEBARCH=amd64
